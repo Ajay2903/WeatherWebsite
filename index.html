@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather</title>
+</head>
+<body>
+    <input type="search" id="search-box" placeholder="Search city name" aria-label="Search">
+    <div class="container">
+        <div class="card">
+            <h2><i class="fa fa-map-marker"> </i>  <span id="location">Enter a City name</span></h2>
+            <h6 id = 'weather'> cloudy</h6>
+            <h4><span id = 'temp'> hello world </span></h4>
+            <img src="" id = 'icon'>
+            <button onclick = "window.location.reload();" class="refresh"><i class="fa fa-refresh"></i> </button>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    
+    // var request = new XMLHttpRequest();
+    // request.open('GET',link, true);
+    // request.onload = function(){
+    //     var obj = json.parse(this.request);
+    //     console.log(obj);
+    // request.send();
+    // }
+    const searchbox = document.getElementById('search-box');
+    searchbox.addEventListener('keypress',Change);
+    function Change(evt){
+    if (evt.keyCode == 13) {
+        
+        let cityname = searchbox.value;
+        cityname = cityname.toLowerCase(); 
+        getapi(cityname);
+        
+      }
+}
+    
+    async function getapi(cityname) {
+        link = 'https://api.openweathermap.org/data/2.5/weather?q=' + cityname + '&appid=66a2cd8e8863d81954f9be17865b909f'
+
+    // Storing response
+    const response = await fetch(link).then((response)=>{if(!response.ok){
+        document.getElementById('location').innerHTML = "City not Found";
+        
+    }
+    return response;});
+    
+    // Storing data in form of JSON
+    var data = await response.json();
+    console.log(data);
+    document.getElementById('weather').innerHTML = data.weather[0].description;
+    document.getElementById('temp').innerHTML = Math.round(data.main.temp - 273.15);
+    document.getElementById('location').innerHTML = data.name;
+    document.getElementById('icon').src = "http://openweathermap.org/img/w/" + data.weather[0].icon + ".png";
+    console.log(data.weather[0].icon);
+    
+}
+// Calling that async function
+</script>
+</html>
